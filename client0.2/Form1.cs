@@ -26,7 +26,17 @@ namespace lokunclient
             connected = ConnectionStatus.NotRunning;
             chkAutostart.Checked = lokun.Autostart;
             btnDownload.Enabled = false;
-            ststrpLabel.Text = lokun.OpenVPNServiceIsRunning ? "Service is up" : "Service is down";
+
+            if (lokun.OpenVPNServiceIsRunning)
+            {
+                btnStartStop.Text = "Stop";
+                ststrpLabel.Text = "Service running";
+            }
+            else
+            {
+                btnStartStop.Text = "Start";
+                ststrpLabel.Text = "Service is not running";
+            }
 
             var username = lokun.GetCurrentUsername();
             if (username != null)
@@ -39,7 +49,6 @@ namespace lokunclient
 
         private async void btnCheckConnection_Click(object sender, EventArgs e)
         {
-            var lokun = Lokun.instance;
             lblCheckConnection.Text = "Checking...";
             lblCheckConnection.Refresh();
             connected = await lokun.FullyCheckConnectionStatusAsync();
@@ -87,12 +96,39 @@ namespace lokunclient
 
         private void txtPassword_Enter(object sender, EventArgs e)
         {
-
+            btnDownload_Click(sender, e);
         }
 
         private void txtPassword_KeyPress(object sender, KeyPressEventArgs e)
         {
             btnDownload.Enabled = true;
+        }
+
+        private void lnkRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://lokun.is/register");
+        }
+
+        private async void btnStartStop_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var status = await lokun.ToogleStartStopAsync();
+                if (status == true)
+                {
+                    // Service is reported as "Running" after .Start()
+                    btnStartStop.Text = "Stop";
+                }
+                else
+                {
+                    btnStartStop.Text = "Start";
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                ststrpLabel.Text = ex.Message;
+                btnStartStop.Text = "Start";
+            }
         }
 
     }

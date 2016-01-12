@@ -32,13 +32,13 @@
             this.btnCheckConnection = new System.Windows.Forms.Button();
             this.lblCheckConnection = new System.Windows.Forms.Label();
             this.chkAutostart = new System.Windows.Forms.CheckBox();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.btnStart = new System.Windows.Forms.Button();
+            this.btnStartStop = new System.Windows.Forms.Button();
             this.rdTunnelEverything = new System.Windows.Forms.RadioButton();
             this.rdExcludeIcelandic = new System.Windows.Forms.RadioButton();
             this.rdOnlyIcelandic = new System.Windows.Forms.RadioButton();
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lnkRegister = new System.Windows.Forms.LinkLabel();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.btnDownload = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -49,7 +49,7 @@
             // 
             // btnCheckConnection
             // 
-            this.btnCheckConnection.Location = new System.Drawing.Point(13, 100);
+            this.btnCheckConnection.Location = new System.Drawing.Point(13, 117);
             this.btnCheckConnection.Name = "btnCheckConnection";
             this.btnCheckConnection.Size = new System.Drawing.Size(109, 23);
             this.btnCheckConnection.TabIndex = 0;
@@ -60,7 +60,7 @@
             // lblCheckConnection
             // 
             this.lblCheckConnection.AutoSize = true;
-            this.lblCheckConnection.Location = new System.Drawing.Point(163, 105);
+            this.lblCheckConnection.Location = new System.Drawing.Point(163, 122);
             this.lblCheckConnection.Name = "lblCheckConnection";
             this.lblCheckConnection.Size = new System.Drawing.Size(73, 13);
             this.lblCheckConnection.TabIndex = 1;
@@ -77,23 +77,15 @@
             this.chkAutostart.UseVisualStyleBackColor = true;
             this.chkAutostart.CheckedChanged += new System.EventHandler(this.chkAutostart_CheckedChanged);
             // 
-            // btnStop
+            // btnStartStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(13, 175);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(75, 23);
-            this.btnStop.TabIndex = 3;
-            this.btnStop.Text = "Stop";
-            this.btnStop.UseVisualStyleBackColor = true;
-            // 
-            // btnStart
-            // 
-            this.btnStart.Location = new System.Drawing.Point(13, 146);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(75, 23);
-            this.btnStart.TabIndex = 4;
-            this.btnStart.Text = "Start";
-            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStartStop.Location = new System.Drawing.Point(13, 163);
+            this.btnStartStop.Name = "btnStartStop";
+            this.btnStartStop.Size = new System.Drawing.Size(75, 23);
+            this.btnStartStop.TabIndex = 4;
+            this.btnStartStop.Text = "Start";
+            this.btnStartStop.UseVisualStyleBackColor = true;
+            this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
             // 
             // rdTunnelEverything
             // 
@@ -137,15 +129,27 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lnkRegister);
             this.groupBox1.Controls.Add(this.txtPassword);
             this.groupBox1.Controls.Add(this.btnDownload);
             this.groupBox1.Controls.Add(this.txtUsername);
             this.groupBox1.Location = new System.Drawing.Point(13, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(213, 80);
+            this.groupBox1.Size = new System.Drawing.Size(200, 95);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Download config";
+            // 
+            // lnkRegister
+            // 
+            this.lnkRegister.AutoSize = true;
+            this.lnkRegister.Location = new System.Drawing.Point(6, 68);
+            this.lnkRegister.Name = "lnkRegister";
+            this.lnkRegister.Size = new System.Drawing.Size(111, 13);
+            this.lnkRegister.TabIndex = 12;
+            this.lnkRegister.TabStop = true;
+            this.lnkRegister.Text = "Register new account";
+            this.lnkRegister.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkRegister_LinkClicked);
             // 
             // txtPassword
             // 
@@ -191,8 +195,7 @@
             this.Controls.Add(this.rdOnlyIcelandic);
             this.Controls.Add(this.rdExcludeIcelandic);
             this.Controls.Add(this.rdTunnelEverything);
-            this.Controls.Add(this.btnStart);
-            this.Controls.Add(this.btnStop);
+            this.Controls.Add(this.btnStartStop);
             this.Controls.Add(this.chkAutostart);
             this.Controls.Add(this.lblCheckConnection);
             this.Controls.Add(this.btnCheckConnection);
@@ -214,8 +217,7 @@
         private System.Windows.Forms.Button btnCheckConnection;
         private System.Windows.Forms.Label lblCheckConnection;
         private System.Windows.Forms.CheckBox chkAutostart;
-        private System.Windows.Forms.Button btnStop;
-        private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.Button btnStartStop;
         private System.Windows.Forms.RadioButton rdTunnelEverything;
         private System.Windows.Forms.RadioButton rdExcludeIcelandic;
         private System.Windows.Forms.RadioButton rdOnlyIcelandic;
@@ -225,6 +227,7 @@
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel ststrpLabel;
+        private System.Windows.Forms.LinkLabel lnkRegister;
     }
 }
 

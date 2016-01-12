@@ -86,17 +86,26 @@ namespace lokunclient
             }
         }
 
-        public void ToogleStartStop()
+        public async Task<bool> ToogleStartStopAsync()
         {
-            // Make async is blocks
-            _openvpn_service.Refresh();
-            if (_openvpn_service.Status != ServiceControllerStatus.Running)
+            // Make async if blocks
+            try
             {
-                _openvpn_service.Start();
+                _openvpn_service.Refresh();
+                if (_openvpn_service.Status != ServiceControllerStatus.Running)
+                {
+                    await Task.Run(() => _openvpn_service.Start());
+                }
+                else
+                {
+                    await Task.Run(() => _openvpn_service.Stop());
+                }
+                _openvpn_service.Refresh();
+                return _openvpn_service.Status == ServiceControllerStatus.Running;
             }
-            else
+            catch (InvalidOperationException e)
             {
-                _openvpn_service.Stop();
+                throw new ApplicationException("OpenVPN is not installed", e);
             }
         }
 
@@ -207,6 +216,10 @@ namespace lokunclient
         {
             get
             {
+                // The other approach to this is EAFP because ServiceController will throw
+                // a InvalidOperationException on .Start() if the service isn't installed. 
+                // https://msdn.microsoft.com/en-us/library/yb9w7ytd(v=vs.110).aspx
+
                 var ovpn = ServiceController.GetServices()
                     .FirstOrDefault(s => s.ServiceName == "OpenVPNService");
                 return ovpn != null;
