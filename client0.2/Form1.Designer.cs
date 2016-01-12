@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(lokunclientform));
             this.btnCheckConnection = new System.Windows.Forms.Button();
             this.lblCheckConnection = new System.Windows.Forms.Label();
@@ -43,6 +44,7 @@
             this.btnDownload = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ststrpLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -186,6 +188,11 @@
             this.ststrpLabel.Name = "ststrpLabel";
             this.ststrpLabel.Size = new System.Drawing.Size(0, 17);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Text = "Lokun";
+            this.notifyIcon.Visible = true;
+            // 
             // lokunclientform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -228,6 +235,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel ststrpLabel;
         private System.Windows.Forms.LinkLabel lnkRegister;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 

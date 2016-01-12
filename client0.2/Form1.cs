@@ -27,6 +27,19 @@ namespace lokunclient
             chkAutostart.Checked = lokun.Autostart;
             btnDownload.Enabled = false;
 
+            switch(lokun.UserRoutingSetting)
+            {
+                case RoutingSetting.Everything:
+                    rdTunnelEverything.Checked = true;
+                    break;
+                case RoutingSetting.ExcludeISNets:
+                    rdExcludeIcelandic.Checked = true;
+                    break;
+                case RoutingSetting.OnlyISNets:
+                    rdOnlyIcelandic.Checked = true;
+                    break;
+            }
+            
             if (lokun.OpenVPNServiceIsRunning)
             {
                 btnStartStop.Text = "Stop";

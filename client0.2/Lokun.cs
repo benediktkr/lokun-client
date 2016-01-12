@@ -30,6 +30,13 @@ namespace lokunclient
         OpenVPNNotInstalled
     };
 
+    public enum RoutingSetting
+    {
+        Everything,
+        OnlyISNets,
+        ExcludeISNets
+    }
+
     class Lokun
     {
         // singleton
@@ -37,6 +44,7 @@ namespace lokunclient
 
         private ServiceController _openvpn_service = new ServiceController("OpenVPNService");
         private string _path = ".";
+        private RoutingSetting _default_routing_setting = RoutingSetting.OnlyISNets;
 
         public async Task<bool> CheckConnectedAsync()
         {
@@ -235,6 +243,22 @@ namespace lokunclient
                 }
                 _openvpn_service.Refresh();
                 return _openvpn_service.Status == ServiceControllerStatus.Running;
+            }
+        }
+
+        public RoutingSetting UserRoutingSetting
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Properties.Settings.Default.routing))
+                {
+                    return _default_routing_setting;
+                }
+                return (RoutingSetting)Enum.Parse(typeof(RoutingSetting), Properties.Settings.Default.routing);
+            }
+            set
+            {
+                Properties.Settings.Default.routing = Enum.GetName(typeof(RoutingSetting), value);
             }
         }
     }
