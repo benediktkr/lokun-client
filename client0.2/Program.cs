@@ -21,7 +21,6 @@ namespace lokunclient
             if (instance_count == 1 || Debugger.IsAttached)
             {
                 // Hey, it's just me around here!
-                File.WriteAllBytes("c:\\users\\benedikt\\Desktop\\test.txt", new byte[] { (byte)'h', (byte)'a', (byte)'l', (byte)'l', (byte)'o' });
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new lokunclientform());
