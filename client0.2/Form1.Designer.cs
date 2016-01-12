@@ -1,6 +1,6 @@
 ﻿namespace lokunclient
 {
-    partial class Form1
+    partial class lokunclientform
     {
         /// <summary>
         /// Required designer variable.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(lokunclientform));
             this.btnCheckConnection = new System.Windows.Forms.Button();
             this.lblCheckConnection = new System.Windows.Forms.Label();
             this.chkAutostart = new System.Windows.Forms.CheckBox();
@@ -39,7 +40,7 @@
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtPassword = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnDownload = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ststrpLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1.SuspendLayout();
@@ -137,7 +138,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.txtPassword);
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.btnDownload);
             this.groupBox1.Controls.Add(this.txtUsername);
             this.groupBox1.Location = new System.Drawing.Point(13, 6);
             this.groupBox1.Name = "groupBox1";
@@ -152,17 +153,19 @@
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(137, 20);
-            this.txtPassword.TabIndex = 11;
+            this.txtPassword.TabIndex = 10;
+            this.txtPassword.Enter += new System.EventHandler(this.txtPassword_Enter);
+            this.txtPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPassword_KeyPress);
             // 
-            // button1
+            // btnDownload
             // 
-            this.button1.Location = new System.Drawing.Point(150, 45);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(44, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnDownload.Location = new System.Drawing.Point(150, 45);
+            this.btnDownload.Name = "btnDownload";
+            this.btnDownload.Size = new System.Drawing.Size(44, 23);
+            this.btnDownload.TabIndex = 11;
+            this.btnDownload.Text = "OK";
+            this.btnDownload.UseVisualStyleBackColor = true;
+            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
             // 
             // statusStrip1
             // 
@@ -179,7 +182,7 @@
             this.ststrpLabel.Name = "ststrpLabel";
             this.ststrpLabel.Size = new System.Drawing.Size(0, 17);
             // 
-            // Form1
+            // lokunclientform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -194,8 +197,9 @@
             this.Controls.Add(this.lblCheckConnection);
             this.Controls.Add(this.btnCheckConnection);
             this.Controls.Add(this.groupBox1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "lokunclientform";
+            this.Text = "Lokun";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -217,7 +221,7 @@
         private System.Windows.Forms.RadioButton rdOnlyIcelandic;
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnDownload;
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel ststrpLabel;

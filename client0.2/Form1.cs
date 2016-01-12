@@ -14,33 +14,35 @@ using lokunclient.Models;
 
 namespace lokunclient
 {
-    public partial class Form1 : Form
+    public partial class lokunclientform : Form
     {
         private Lokun lokun;
         private ConnectionStatus connected;
 
-        public Form1()
+        public lokunclientform()
         {
             InitializeComponent();
             lokun = Lokun.instance;
             connected = ConnectionStatus.NotRunning;
             chkAutostart.Checked = lokun.Autostart;
+            btnDownload.Enabled = false;
+            ststrpLabel.Text = lokun.OpenVPNServiceIsRunning ? "Service is up" : "Service is down";
+
             var username = lokun.GetCurrentUsername();
             if (username != null)
             {
                 txtUsername.Text = username;
                 txtPassword.Text = "hunter2";
-                ststrpLabel.Text = "Current account: " + username;
+                //ststrpLabel.Text = "Current account: " + username;
             }
-            btnStop.Text = lokun.OpenVPNServiceIsRunning ? "Stop" : "Start";
         }
 
-        private void btnCheckConnection_Click(object sender, EventArgs e)
+        private async void btnCheckConnection_Click(object sender, EventArgs e)
         {
             var lokun = Lokun.instance;
             lblCheckConnection.Text = "Checking...";
             lblCheckConnection.Refresh();
-            connected = lokun.FullyCheckConnectionStatusAsync();
+            connected = await lokun.FullyCheckConnectionStatusAsync();
             if (connected == ConnectionStatus.EverythingTunneled)
             {
                 lblCheckConnection.Text = "Tunnel active";
@@ -69,7 +71,7 @@ namespace lokunclient
             lokun.SetAutostart(chkAutostart.Checked);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnDownload_Click(object sender, EventArgs e)
         {
             try
             {
@@ -83,6 +85,15 @@ namespace lokunclient
             }
         }
 
+        private void txtPassword_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtPassword_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            btnDownload.Enabled = true;
+        }
 
     }
 }

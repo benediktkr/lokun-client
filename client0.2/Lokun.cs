@@ -38,28 +38,26 @@ namespace lokunclient
         private ServiceController _openvpn_service = new ServiceController("OpenVPNService");
         private string _path = ".";
 
-        public bool CheckConnectedAsync()
+        public async Task<bool> CheckConnectedAsync()
         {
             // BAD: Phoning home.
             var client = new RestClient("https://lokun.is/");
             var request = new RestRequest("connected.json");
             request.AddHeader("User-Agent", "lokun-client0.2");
-            bool connected = false;
-            client.ExecuteAsync<Connected>(request, response =>
+            
+            var response = await client.ExecuteGetTaskAsync<Connected>(request);
+
+            if (response.Data == null)
             {
-                if (response.Data == null)
-                {
-                    connected = false;
-                }
-                else
-                {
-                    connected = response.Data.connected;
-                }
-            });
-            return connected;
+                return false;
+            }
+            else
+            {
+                return response.Data.connected;
+            }
         }
 
-        public ConnectionStatus FullyCheckConnectionStatusAsync()
+        public async Task<ConnectionStatus> FullyCheckConnectionStatusAsync()
         {
             // This is a method and not a property because it has side-effects.
             // It's named Async because it calls an Async method.
@@ -67,12 +65,12 @@ namespace lokunclient
             {
                 return ConnectionStatus.OpenVPNNotInstalled;
             }
-            else if (CheckConnectedAsync())
+            else if (await CheckConnectedAsync())
             {
                 // Is traffic to lokun.is routed through Lokun?
                 return ConnectionStatus.EverythingTunneled;
             }
-            else if (PingVPNNode())
+            else if (await PingVPNNode())
             {
                 // Can we talk to a VPN node?
                 return ConnectionStatus.ConnectedWithoutDGW;
@@ -109,7 +107,7 @@ namespace lokunclient
                 .FirstOrDefault();
         }
 
-        public void DownloadConfigAsync(string username, string password)
+        public async void DownloadConfigAsync(string username, string password)
         {
             if (!username.All(char.IsLetterOrDigit))
             {
@@ -126,12 +124,12 @@ namespace lokunclient
                     };
                     var values_encoded = new FormUrlEncodedContent(values);
 
-                    var response = client.PostAsync(url, values_encoded);
-                    if (response.Result.StatusCode == HttpStatusCode.OK)
+                    var response = await client.PostAsync(url, values_encoded);
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        var content = response.Result.Content.ReadAsByteArrayAsync();
+                        var content = await response.Content.ReadAsByteArrayAsync();
 
-                        using (var ms = new MemoryStream(content.Result))
+                        using (var ms = new MemoryStream(content))
                         {
                             using (var zip = new ZipArchive(ms))
                             {
@@ -146,8 +144,8 @@ namespace lokunclient
                     }
                     else
                     {
-                        var error_content = response.Result.Content.ReadAsStringAsync();
-                        var apierror = JsonConvert.DeserializeObject<APIError>(error_content.Result);
+                        var error_content = await response.Content.ReadAsStringAsync();
+                        var apierror = JsonConvert.DeserializeObject<APIError>(error_content);
                         throw new ApplicationException(apierror.error);
                     }
                 }
@@ -187,16 +185,17 @@ namespace lokunclient
             }
         }
 
-        public bool PingVPNNode()
+        public async Task<bool> PingVPNNode()
         {
             // Side-effects -> method
             //
             // BAD: An upstream network provider will recieve the ping packet and can
             // fingerprint/note users when not connected
-            var pinger = new Ping();
             try
             {
-                return pinger.Send("10.40.20.1").Status == IPStatus.Success;
+                var pinger = new Ping();
+                var pingresult = await pinger.SendPingAsync("10.40.20.1", 700);
+                return pingresult.Status == IPStatus.Success;
             }
             catch (PingException)
             {
