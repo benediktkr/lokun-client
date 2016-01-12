@@ -88,7 +88,6 @@ namespace lokunclient
 
         public async Task<bool> ToogleStartStopAsync()
         {
-            // Make async if blocks
             try
             {
                 _openvpn_service.Refresh();
