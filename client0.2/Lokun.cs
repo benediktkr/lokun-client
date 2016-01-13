@@ -135,13 +135,32 @@ namespace lokunclient
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
                         var isnets = await response.Content.ReadAsStringAsync();
-                        return new List<string[]>();
+                        var netlist = new List<string[]>();
+
+                        foreach (var cidr_net in isnets.Split('\n'))
+                        {
+                            // Pretty much in verbatim from Kalli's old code
+                            string[] net = cidr_net.Split('/');
+                            int cidr = int.Parse(net[1]);
+                            uint bitmask = 0xFFFFFFFF << (32 - cidr);
+                            byte[] bytes = BitConverter.GetBytes(bitmask);
+                            Array.Reverse(bytes);
+                            string netmask = bytes[0].ToString() + "." + bytes[1].ToString() + "." +
+                                             bytes[2].ToString() + "." + bytes[3].ToString();
+                            netlist.Add(new string[] { net[0], netmask});
+                        }
+                        return netlist;
                     }
                     else
                     {
                         throw new ApplicationException("is-nets error");
                     }
                 }
+                    catch (IndexOutOfRangeException ex)
+                {
+                        // malformed file
+                        throw new ApplicationException("is-nets error", ex);
+                    }
                 catch (AggregateException ex)
                 {
                     throw new ApplicationException("is-nets error", ex);
