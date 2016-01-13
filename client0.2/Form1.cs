@@ -58,6 +58,7 @@ namespace lokunclient
                 txtPassword.Text = "hunter2";
                 //ststrpLabel.Text = "Current account: " + username;
             }
+
         }
 
         private async void btnCheckConnection_Click(object sender, EventArgs e)

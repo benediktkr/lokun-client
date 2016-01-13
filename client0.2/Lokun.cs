@@ -44,6 +44,7 @@ namespace lokunclient
 
         private ServiceController _openvpn_service = new ServiceController("OpenVPNService");
         private string _path = ".";
+        private string _isnets_file = "http://www.rix.is/is-net.txt";
         private RoutingSetting _default_routing_setting = RoutingSetting.OnlyISNets;
 
         public async Task<bool> CheckConnectedAsync()
@@ -121,6 +122,31 @@ namespace lokunclient
             return Directory.GetFiles(_path, "*.key")
                 .Select(Path.GetFileNameWithoutExtension)
                 .FirstOrDefault();
+        }
+
+        
+        public async Task<List<string[]>> GetISNetsAsync()
+        {
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    var response = await client.GetAsync(_isnets_file);
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        var isnets = await response.Content.ReadAsStringAsync();
+                        return new List<string[]>();
+                    }
+                    else
+                    {
+                        throw new ApplicationException("is-nets error");
+                    }
+                }
+                catch (AggregateException ex)
+                {
+                    throw new ApplicationException("is-nets error", ex);
+                }
+            }
         }
 
         public async void DownloadConfigAsync(string username, string password)
