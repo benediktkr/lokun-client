@@ -39,17 +39,8 @@ namespace lokunclient
                     rdOnlyIcelandic.Checked = true;
                     break;
             }
-            
-            if (lokun.OpenVPNServiceIsRunning)
-            {
-                btnStartStop.Text = "Stop";
-                ststrpLabel.Text = "Service running";
-            }
-            else
-            {
-                btnStartStop.Text = "Start";
-                ststrpLabel.Text = "Service is not running";
-            }
+
+            StartStopSetUI(lokun.OpenVPNServiceIsRunning);
 
             var username = lokun.GetCurrentUsername();
             if (username != null)
@@ -58,7 +49,26 @@ namespace lokunclient
                 txtPassword.Text = "hunter2";
                 //ststrpLabel.Text = "Current account: " + username;
             }
+        }
 
+        private void StartStopSetUI(bool started)
+        {
+            if (started)
+            {
+                btnStartStop.Text = "Stop";
+                ststrpLabel.Text = "Service running";
+                rdExcludeIcelandic.Enabled = false;
+                rdOnlyIcelandic.Enabled = false;
+                rdTunnelEverything.Enabled = false;
+            }
+            else
+            {
+                btnStartStop.Text = "Start";
+                ststrpLabel.Text = "Service is not running";
+                rdExcludeIcelandic.Enabled = true;
+                rdOnlyIcelandic.Enabled = true;
+                rdTunnelEverything.Enabled = true;
+            }
         }
 
         private async void btnCheckConnection_Click(object sender, EventArgs e)
@@ -128,15 +138,7 @@ namespace lokunclient
             try
             {
                 var status = await lokun.ToogleStartStopAsync();
-                if (status == true)
-                {
-                    // Service is reported as "Running" after .Start()
-                    btnStartStop.Text = "Stop";
-                }
-                else
-                {
-                    btnStartStop.Text = "Start";
-                }
+                StartStopSetUI(status);
             }
             catch (ApplicationException ex)
             {
