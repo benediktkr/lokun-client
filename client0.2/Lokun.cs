@@ -47,7 +47,15 @@ namespace lokunclient
         private ServiceController _openvpn_service = new ServiceController("OpenVPNService");
         private string _path = ".";
         private string _isnets_file = "http://www.rix.is/is-net.txt";
+        private string _local_dgw;
         private RoutingSetting _default_routing_setting = RoutingSetting.OnlyISNets;
+
+        public Lokun()
+        {
+            // Since this program starts the service, this is still 
+            // the local gw when started (assming it didn't crash). 
+            _local_dgw = FindDefaultGW();
+        }
 
         public async Task<bool> CheckConnectedAsync()
         {
