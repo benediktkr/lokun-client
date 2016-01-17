@@ -10,6 +10,8 @@ using System.Net;
 using System.Net.Http;
 using System.IO;
 using System.IO.Compression;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Microsoft.Win32;
 
 using RestSharp;
@@ -135,6 +137,57 @@ namespace lokunclient
             string netmask = bytes[0].ToString() + "." + bytes[1].ToString() + "." +
                              bytes[2].ToString() + "." + bytes[3].ToString();
             return new Tuple<string, string>(net[0], netmask);
+        }
+
+        private void AddRoute(string net, string netmask, string dgw)
+        {
+            // From Kalli's old code
+            Process p = new Process();
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.FileName = "route";
+            p.StartInfo.Arguments = "add " + net + " mask " + netmask + " " + dgw;
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.Start();
+        }
+
+        private void DelRoute(string net, string netmask)
+        {
+            // From Kalli's old code
+            Process p = new Process();
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.FileName = "route";
+            p.StartInfo.Arguments = "delete " + net + " mask " + netmask;
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.Start();
+        }
+
+        private string FindDefaultGW()
+        {
+            // From Kalli's old code
+            Process p = new Process();
+            p.StartInfo.UseShellExecute = false;
+            p.StartInfo.FileName = "route";
+            p.StartInfo.Arguments = "print";
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.StandardOutputEncoding = Encoding.ASCII;
+            p.Start();
+            StreamReader output = p.StandardOutput;
+            while (!output.EndOfStream)
+            {
+                string line = output.ReadLine();
+                Match match = Regex.Match(line, @"0\.0\.0\.0.*0\.0\.0\.0");
+                if (match.Success)
+                {
+                    string gw = line.Split((char[])null, StringSplitOptions.RemoveEmptyEntries)[2];
+                    return gw;
+                }
+            }
+            // TODO: error handling
+            return null;
         }
         
         public async Task<IEnumerable<Tuple<string, string>>> GetISNetsAsync()
